@@ -39,17 +39,14 @@ public class NewRecordService {
             return "速度过快，请重新输入";
         }else {
             Map map = queryRunStandard(model.getToken(), model.getSchoolId());
-            if (map == null){
-                return "跑步失败";
-            }
             String semesterYear = (String) map.get("semesterYear");
             Map body = runBody(model, semesterYear);
             Map headers = runHeader(model.getToken(), body);
             String result = HttpRequest.post(AppConfig.HOST + "/unirun/save/run/record/new").addHeaders(headers).body(mapper.writeValueAsString(body)).execute().body();
-//            System.out.println(result);
-            return result;
+            System.out.println(result);
         }
 
+        return null;
     }
 
     public Map runHeader(String token, Map body) throws NoSuchAlgorithmException, JsonProcessingException {
@@ -139,7 +136,6 @@ public class NewRecordService {
                 loginHeaders.put("Content-Type", AppConfig.CONTENT_TYPE);
                 loginHeaders.put("User-Agent", AppConfig.USER_AGENT);
                 String result = HttpRequest.get(url).addHeaders(loginHeaders).execute().body();
-//                System.out.println(result);
                 Map map = mapper.readValue(result, Map.class);
                 if (map.get("code").equals(10000)) {
                     return (Map) map.get("response");
